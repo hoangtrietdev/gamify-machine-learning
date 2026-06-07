@@ -307,12 +307,7 @@ const Home: NextPage = () => {
             borderColor="dark.border"
           >
             <Text fontSize="sm" color="gray.700">
-              All training is simulated in the browser. Connect your Python backend
-              via{" "}
-              <Text as="span" color="neon.cyan" fontFamily="mono" fontSize="xs">
-                NEXT_PUBLIC_API_URL
-              </Text>{" "}
-              for real model training.
+              All training is simulated in the browser.
             </Text>
           </Box>
         </Box>

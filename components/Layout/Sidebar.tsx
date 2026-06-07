@@ -157,8 +157,7 @@ export function Sidebar() {
             </Text>
           </HStack>
           <Text fontSize="10px" color="gray.700" lineHeight={1.4}>
-            Currently using simulated training. Hook up your Python backend
-            via <Text as="span" color="neon.cyan" fontFamily="mono" fontSize="9px">NEXT_PUBLIC_API_URL</Text>.
+            Currently using simulated training.
           </Text>
         </Box>
       </VStack>
