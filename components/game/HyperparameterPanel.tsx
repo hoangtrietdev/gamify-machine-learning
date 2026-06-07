@@ -128,9 +128,9 @@ export function HyperparameterPanel({
     onChange({ ...hp, [key]: value });
   };
 
-  const showKernel = hp.algorithm === "svm";
-  const showDepth = hp.algorithm === "random_forest" || hp.algorithm === "svm";
-  const showHiddenLayers = hp.algorithm === "neural_net";
+  // const showKernel = hp.algorithm === "svm";
+  // const showDepth = hp.algorithm === "random_forest" || hp.algorithm === "svm";
+  // const showHiddenLayers = hp.algorithm === "neural_net";
   const depthLabel = hp.algorithm === "random_forest" ? "Max Depth" : hp.algorithm === "neural_net" ? "Hidden Layers" : "Max Depth";
 
   const formatLR = (v: number) => {
@@ -347,7 +347,7 @@ export function HyperparameterPanel({
         <Divider borderColor="dark.border" />
 
         {/* Kernel Type — only for SVM */}
-        {showKernel && (
+        {/* {showKernel && (
           <FormControl isDisabled={isDisabled}>
             <HStack justify="space-between" mb={2}>
               <FormLabel mb={0} fontSize="sm" fontWeight={600} color="gray.300">
@@ -372,7 +372,7 @@ export function HyperparameterPanel({
               RBF works best for most non-linear problems
             </FormHelperText>
           </FormControl>
-        )}
+        )} */}
 
         {/* Regularization switch */}
         <FormControl isDisabled={isDisabled}>
