@@ -18,10 +18,10 @@ interface StarRatingProps {
 }
 
 function getStarCount(accuracy: number, objective: number): StarCount {
-  const ratio = accuracy / objective;
-  if (accuracy >= objective * 1.05 || accuracy >= 90) return 3;
-  if (accuracy >= objective * 0.95 || accuracy >= 80) return 2;
-  if (accuracy >= objective * 0.80 || accuracy >= 70) return 1;
+  // const ratio = accuracy / objective;
+  if (accuracy >= objective * 1.05 || accuracy >= 80) return 3;
+  if (accuracy >= objective * 0.95 || accuracy >= 75) return 2;
+  if (accuracy >= objective * 0.80 || accuracy >= 65) return 1;
   return 0;
 }
 
@@ -59,7 +59,7 @@ export function StarRating({ accuracy, objective }: StarRatingProps) {
   const message = getResultMessage(stars, accuracy);
 
   return (
-    <VStack spacing={2} py={3} align="center">
+    <VStack spacing={2} py={2} align="center">
       {/* Stars */}
       <HStack spacing={2}>
         {[1, 2, 3].map((n) => (
@@ -80,7 +80,7 @@ export function StarRating({ accuracy, objective }: StarRatingProps) {
       {/* Accuracy badge */}
       <Badge
         px={3}
-        py={1}
+        py={0.5}
         borderRadius="full"
         fontSize="md"
         fontFamily="mono"
@@ -103,7 +103,7 @@ export function StarRating({ accuracy, objective }: StarRatingProps) {
       </VStack>
 
       {/* Stars legend */}
-      <HStack spacing={6} pt={1}>
+      <HStack spacing={6} pt={0.5}>
         {[
           { label: "≥70%", stars: 1 },
           { label: "≥80%", stars: 2 },

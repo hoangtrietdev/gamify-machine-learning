@@ -59,7 +59,7 @@ export function EpochLog({ epochs, isTraining }: EpochLogProps) {
 
   return (
     <Box
-      h="120px"
+      h="110px"
       overflowY="auto"
       bg="dark.panel"
       borderRadius="lg"

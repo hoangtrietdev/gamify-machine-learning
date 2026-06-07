@@ -150,9 +150,9 @@ export async function simulateTraining(
     
     // Scale accuracy: Base 40% + up to 45% based on hyperparameters (Max 85%)
     // Multiplied by preprocessing modifier (e.g. 1.1) yields a max of ~93.5%
-    const rawAccuracy = 40 + quality * 45; 
+    const rawAccuracy = 30 + quality * 45; 
     const finalAccuracy = parseFloat(
-      Math.min(93.5, rawAccuracy * preprocessingModifier).toFixed(2)
+      Math.min(90, rawAccuracy * preprocessingModifier).toFixed(2)
     );
     const epochResults = generateEpochCurve(hyperparameters.epochs, finalAccuracy);
     const msPerEpoch = Math.max(80, 3000 / hyperparameters.epochs);

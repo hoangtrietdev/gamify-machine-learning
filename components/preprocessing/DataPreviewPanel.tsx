@@ -218,9 +218,6 @@ export function DataPreviewPanel({ dataset }: DataPreviewPanelProps) {
       )}
 
       {/* Data table */}
-      <Text fontSize="xs" color="gray.600" fontFamily="mono" mb={2}>
-        ── COLUMN EXPLORER ──────────────────────────────────
-      </Text>
       <TableContainer
         border="1px solid" borderColor="dark.border" borderRadius="xl" overflow="auto"
       >
@@ -229,7 +226,7 @@ export function DataPreviewPanel({ dataset }: DataPreviewPanelProps) {
             <Tr>
               {["Column", "Type", "Sample Values", "Distribution", "Missing", "Outliers", "Importance"].map((h) => (
                 <Th key={h} color="gray.500" fontSize="10px" letterSpacing="wider"
-                  borderBottom="1px solid" borderColor="dark.border" py={3}>
+                  borderBottom="1px solid" borderColor="dark.border" py={2}>
                   {h}
                 </Th>
               ))}

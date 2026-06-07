@@ -165,18 +165,6 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
                 Edit Preprocessing
               </Button>
             )}
-
-            {showTraining && (
-              <Badge
-                colorScheme={score.grade === "A" || score.grade === "B" ? "green" : score.grade === "C" ? "yellow" : "orange"}
-                variant="solid"
-                fontSize="xs"
-                px={2}
-                py={0.5}
-              >
-                Pipeline: {score.grade} ({score.total}/100)
-              </Badge>
-            )}
           </HStack>
 
           {/* ── PREPROCESSING WIZARD (Steps 1-4) ── */}

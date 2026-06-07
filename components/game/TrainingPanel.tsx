@@ -168,14 +168,6 @@ export function TrainingPanel({
           />
         </Box>
 
-        {/* Epoch log */}
-        <Box>
-          <Text fontSize="xs" color="gray.600" fontFamily="mono" mb={2}>
-            ── EPOCH LOG ──────────────────
-          </Text>
-          <EpochLog epochs={epochResults} isTraining={isTraining} />
-        </Box>
-
         {/* Star rating on completion */}
         {isComplete && result && (
           <>
@@ -249,13 +241,6 @@ export function TrainingPanel({
             </Button>
           )}
         </HStack>
-
-        {/* Training time on complete */}
-        {isComplete && result && (
-          <Text fontSize="10px" color="gray.700" textAlign="center" fontFamily="mono">
-            Trained in {(result.trainingTime / 1000).toFixed(1)}s · Algorithm: {result.algorithm.replace("_", " ")}
-          </Text>
-        )}
       </VStack>
     </Box>
   );
