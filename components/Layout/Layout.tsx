@@ -1,0 +1,26 @@
+// =============================================================================
+// Layout Component — wraps all pages
+// =============================================================================
+import { Box, Flex } from "@chakra-ui/react";
+import { ReactNode } from "react";
+import { Topbar } from "./Topbar";
+import { Sidebar } from "./Sidebar";
+
+interface LayoutProps {
+  children: ReactNode;
+  showSidebar?: boolean;
+}
+
+export function Layout({ children, showSidebar = true }: LayoutProps) {
+  return (
+    <Box minH="100vh" bg="dark.bg">
+      <Topbar />
+      <Flex>
+        {showSidebar && <Sidebar />}
+        <Box flex={1} minW={0} overflowX="hidden">
+          {children}
+        </Box>
+      </Flex>
+    </Box>
+  );
+}
