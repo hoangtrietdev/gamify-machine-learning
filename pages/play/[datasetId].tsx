@@ -198,6 +198,7 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
                 templateColumns={{ base: "1fr", lg: "340px 1fr 380px" }}
                 gap={5}
                 alignItems="flex-start"
+                flex={1}
               >
                 {/* Panel 1: Context */}
                 <GridItem>
