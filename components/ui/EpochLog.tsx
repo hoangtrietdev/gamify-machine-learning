@@ -38,7 +38,7 @@ export function EpochLog({ epochs, isTraining }: EpochLogProps) {
   if (epochs.length === 0) {
     return (
       <Box
-        h="200px"
+        h="120px"
         display="flex"
         alignItems="center"
         justifyContent="center"
@@ -59,7 +59,7 @@ export function EpochLog({ epochs, isTraining }: EpochLogProps) {
 
   return (
     <Box
-      h="200px"
+      h="120px"
       overflowY="auto"
       bg="dark.panel"
       borderRadius="lg"

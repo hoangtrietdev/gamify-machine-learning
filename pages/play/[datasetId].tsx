@@ -237,14 +237,6 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
                   />
                 </GridItem>
               </Grid>
-
-              <Box mt={4} textAlign="center">
-                <Text fontSize="xs" color="gray.700" fontFamily="mono">
-                  💡 Pipeline Score: {score.total}/100 (Grade {score.grade}) ·
-                  Accuracy Modifier ×{score.accuracyModifier.toFixed(2)} ·
-                  Tune hyperparameters then click TRAIN MODEL.
-                </Text>
-              </Box>
             </>
           )}
         </Box>

@@ -59,9 +59,9 @@ export function StarRating({ accuracy, objective }: StarRatingProps) {
   const message = getResultMessage(stars, accuracy);
 
   return (
-    <VStack spacing={4} py={4} align="center">
+    <VStack spacing={2} py={3} align="center">
       {/* Stars */}
-      <HStack spacing={3}>
+      <HStack spacing={2}>
         {[1, 2, 3].map((n) => (
           <Box
             key={n}
@@ -69,7 +69,7 @@ export function StarRating({ accuracy, objective }: StarRatingProps) {
           >
             <Icon
               as={n <= stars ? FaStar : FaRegStar}
-              boxSize={10}
+              boxSize={8}
               color={n <= stars ? "yellow.400" : "gray.700"}
               filter={n <= stars ? "drop-shadow(0 0 8px rgba(251,191,36,0.7))" : undefined}
             />
@@ -79,10 +79,10 @@ export function StarRating({ accuracy, objective }: StarRatingProps) {
 
       {/* Accuracy badge */}
       <Badge
-        px={4}
-        py={2}
+        px={3}
+        py={1}
         borderRadius="full"
-        fontSize="xl"
+        fontSize="md"
         fontFamily="mono"
         fontWeight={900}
         bgGradient={stars >= 3 ? "linear(to-r, yellow.400, orange.400)" : "linear(to-r, neon.purple, neon.cyan)"}
@@ -93,11 +93,11 @@ export function StarRating({ accuracy, objective }: StarRatingProps) {
       </Badge>
 
       {/* Message */}
-      <VStack spacing={1} textAlign="center">
-        <Text fontSize="lg" fontWeight={800} color={message.color}>
+      <VStack spacing={0} textAlign="center">
+        <Text fontSize="md" fontWeight={800} color={message.color}>
           {message.title}
         </Text>
-        <Text fontSize="sm" color="gray.400" maxW="280px" lineHeight={1.6}>
+        <Text fontSize="xs" color="gray.400" maxW="280px" lineHeight={1.4}>
           {message.subtitle}
         </Text>
       </VStack>
