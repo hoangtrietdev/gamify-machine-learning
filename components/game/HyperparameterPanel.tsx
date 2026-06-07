@@ -145,7 +145,7 @@ export function HyperparameterPanel({
       borderColor="dark.border"
       borderRadius="2xl"
       p={5}
-      h="full"
+      h="auto"
     >
       {/* Header */}
       <HStack justify="space-between" mb={5}>

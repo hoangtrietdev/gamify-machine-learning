@@ -80,7 +80,7 @@ export function TrainingPanel({
       borderColor="dark.border"
       borderRadius="2xl"
       p={5}
-      h="full"
+      h="auto"
       position="relative"
       overflow="hidden"
     >
@@ -146,7 +146,7 @@ export function TrainingPanel({
             />
           </SimpleGrid>
         )}
-
+        <EpochLog epochs={epochResults} isTraining={isTraining} />
         {/* Progress bar */}
         <Box>
           <Flex justify="space-between" mb={2}>

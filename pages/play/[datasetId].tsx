@@ -199,7 +199,7 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
                 </GridItem>
 
                 {/* Panel 2: Hyperparameters */}
-                <GridItem>
+                <GridItem h="100%" overflowY="auto">
                   <HyperparameterPanel
                     hyperparameters={hyperparameters}
                     onChange={setHyperparameters}
@@ -209,7 +209,7 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
                 </GridItem>
 
                 {/* Panel 3: Training */}
-                <GridItem>
+                <GridItem h="100%" overflowY="auto">
                   <TrainingPanel
                     onTrain={handleTrain}
                     onReset={resetTraining}
