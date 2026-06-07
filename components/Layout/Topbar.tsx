@@ -83,7 +83,7 @@ export function Topbar() {
           <Tooltip label="View source" hasArrow>
             <Box
               as="a"
-              href="https://github.com"
+              href="https://github.com/hoangtrietdev/gamify-machine-learning"
               target="_blank"
               color="gray.500"
               _hover={{ color: "gray.200" }}
