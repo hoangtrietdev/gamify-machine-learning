@@ -2,10 +2,10 @@
 // Step 2: Feature Selection Panel
 // =============================================================================
 import {
-  Box, Text, HStack, VStack, Checkbox, Badge, Icon, Button, Flex,
+  Box, Text, HStack, VStack, Badge, Icon, Button, Flex,
   Tooltip, SimpleGrid, Alert, AlertIcon,
 } from "@chakra-ui/react";
-import { FaRobot, FaTrash, FaCheckSquare, FaFilter } from "react-icons/fa";
+import { FaRobot, FaTrash, FaFilter, FaCheckSquare } from "react-icons/fa";
 import { MdWarning } from "react-icons/md";
 import { ColumnInfo, PreprocessingConfig } from "@/types";
 
@@ -154,17 +154,9 @@ export function FeatureSelectionPanel({ columns, config, onChange }: FeatureSele
                 _hover={{ borderColor: "neon.purple" }}
               >
                 <Flex justify="space-between" align="flex-start" mb={2}>
-                  <Checkbox
-                    isChecked={isSelected}
-                    onChange={() => toggle(col.id)}
-                    colorScheme="purple"
-                    size="md"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Text fontSize="sm" fontWeight={700} color={isSelected ? "white" : "gray.400"} ml={1} noOfLines={1}>
-                      {col.name}
-                    </Text>
-                  </Checkbox>
+                  <Text fontSize="sm" fontWeight={700} color={isSelected ? "white" : "gray.400"} ml={1} noOfLines={1}>
+                    {col.name}
+                  </Text>
                   <HStack spacing={1}>
                     {isLowImp && (
                       <Tooltip label="Low importance — consider removing" hasArrow>
