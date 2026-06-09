@@ -1,7 +1,7 @@
 // =============================================================================
 // PreprocessingWizard — Step shell with stepper + score widget
 // =============================================================================
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box, Text, HStack, VStack, Button, Icon, Flex, Badge, CircularProgress,
   CircularProgressLabel, Tooltip,
@@ -148,15 +148,36 @@ interface PreprocessingWizardProps {
   onConfigChange: (c: PreprocessingConfig) => void;
   hyperparameters: Hyperparameters;
   onProceedToTrain: () => void;
+  /** Controlled step from parent (for tour navigation) */
+  externalStep?: number;
+  onExternalStepChange?: (step: number) => void;
 }
 
 export function PreprocessingWizard({
   dataset, config, onConfigChange, hyperparameters, onProceedToTrain,
+  externalStep, onExternalStepChange,
 }: PreprocessingWizardProps) {
   const isNeuralNet = hyperparameters.algorithm === "neural_net";
   const maxStep: WizardStep = isNeuralNet ? 4 : 3;
 
-  const [currentStep, setCurrentStep] = useState<WizardStep>(1);
+  const [currentStep, setCurrentStepInternal] = useState<WizardStep>(1);
+
+  // Keep internal step in sync with externalStep prop (tour navigation)
+  useEffect(() => {
+    if (externalStep !== undefined && externalStep !== currentStep) {
+      // Clamp to valid wizard range
+      const clamped = Math.max(1, Math.min(externalStep, maxStep)) as WizardStep;
+      setCurrentStepInternal(clamped);
+    }
+  }, [externalStep]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const setCurrentStep = (fn: (prev: WizardStep) => WizardStep) => {
+    setCurrentStepInternal((prev) => {
+      const next = fn(prev);
+      if (onExternalStepChange) onExternalStepChange(next);
+      return next;
+    });
+  };
 
   const score = computePreprocessingScore(config, dataset.columns, hyperparameters.algorithm);
 
@@ -186,7 +207,15 @@ export function PreprocessingWizard({
   return (
     <Box display="flex" flexDir="column" flex={1} overflow="hidden">
       {/* Stepper */}
-      <Box bg="dark.panel" border="1px solid" borderColor="dark.border" borderRadius="2xl" p={5} mb={6} flexShrink={0}>
+      <Box
+        bg="dark.panel"
+        border="1px solid"
+        borderColor="dark.border"
+        borderRadius="2xl"
+        p={{ base: 3, md: 4 }}
+        mb={{ base: 3, md: 4 }}
+        flexShrink={0}
+      >
         <HStack align="flex-start" spacing={0}>
           {steps.map((s, i) => (
             <React.Fragment key={s.label}>
@@ -202,7 +231,7 @@ export function PreprocessingWizard({
       </Box>
 
       {/* Content + Score */}
-      <Flex gap={5} align="stretch" flex={1} overflow="hidden">
+      <Flex gap={{ base: 3, md: 4 }} align="stretch" flex={1} overflow="hidden">
         {/* Step content */}
         <Box
           flex={1}
@@ -210,7 +239,7 @@ export function PreprocessingWizard({
           border="1px solid"
           borderColor="dark.border"
           borderRadius="2xl"
-          p={6}
+          p={{ base: 3, md: 4, lg: 5 }}
           minH={0}
           display="flex"
           flexDir="column"
@@ -254,13 +283,13 @@ export function PreprocessingWizard({
         flexShrink={0}
         justify="space-between"
         align="center"
-        mt={5}
+        mt={{ base: 2, md: 3 }}
         bg="dark.panel"
         border="1px solid"
         borderColor="dark.border"
         borderRadius="2xl"
-        px={6}
-        py={4}
+        px={{ base: 3, md: 5 }}
+        py={{ base: 2, md: 3 }}
       >
         <Button
           leftIcon={<Icon as={FaChevronLeft} />}

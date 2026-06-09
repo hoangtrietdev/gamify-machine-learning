@@ -7,7 +7,7 @@ import {
   Box, Grid, GridItem, Text, HStack, Icon, Breadcrumb, BreadcrumbItem,
   BreadcrumbLink, Badge, Button,
 } from "@chakra-ui/react";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { FaChevronRight, FaHome, FaArrowLeft } from "react-icons/fa";
 import { MdSportsEsports } from "react-icons/md";
@@ -60,6 +60,8 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
     () => getDefaultPreprocessingConfig(dataset.columns)
   );
   const [showTraining, setShowTraining] = useState(false);
+  // Wizard step is lifted so the tour can navigate it
+  const [wizardStep, setWizardStep] = useState<number>(1);
 
   const {
     train, resetTraining, isTraining, isComplete, isError,
@@ -69,6 +71,7 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
   // Reset state when dataset changes
   useEffect(() => {
     setShowTraining(false);
+    setWizardStep(1);
     setHyperparameters(DEFAULT_HYPERPARAMETERS);
     setPreprocessingConfig(getDefaultPreprocessingConfig(dataset.columns));
     resetTraining();
@@ -86,8 +89,24 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
 
   const handleBackToPreprocessing = () => {
     setShowTraining(false);
+    setWizardStep(1);
     resetTraining();
   };
+
+  // Called by TourGuide when tour step changes
+  const handleTourStepChange = useCallback(
+    (step: { wizardStep?: number }) => {
+      if (step.wizardStep === undefined) return;
+      if (step.wizardStep === 5) {
+        // Show the training arena for hyperparameter / training steps
+        setShowTraining(true);
+      } else {
+        setShowTraining(false);
+        setWizardStep(step.wizardStep);
+      }
+    },
+    []
+  );
 
   const handleTrain = () => {
     train({
@@ -109,12 +128,24 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
       </Head>
 
       <Layout onStartTour={tour.startTour}>
-        <TourGuide steps={PLAY_TOUR_STEPS} tour={tour} />
-        <Box px={{ base: 4, lg: 6 }} py={4} maxW="1400px" mx="auto" h="calc(100vh - 65px)" display="flex" flexDir="column" overflow="hidden">
+        <TourGuide steps={PLAY_TOUR_STEPS} tour={tour} onStepChange={handleTourStepChange} />
+        <Box
+          px={{ base: 3, md: 4, lg: 6 }}
+          py={{ base: 2, md: 3, lg: 4 }}
+          maxW="1400px"
+          mx="auto"
+          h="calc(100vh - 57px)"
+          display="flex"
+          flexDir="column"
+          overflow="hidden"
+        >
           {/* Breadcrumb */}
           <Breadcrumb
             separator={<Icon as={FaChevronRight} color="gray.600" boxSize={2.5} />}
-            mb={4} fontSize="sm" color="gray.500" flexShrink={0}
+            mb={{ base: 2, md: 3 }}
+            fontSize="xs"
+            color="gray.500"
+            flexShrink={0}
           >
             <BreadcrumbItem>
               <BreadcrumbLink as={Link} href="/" _hover={{ color: "gray.300" }}>
@@ -144,7 +175,13 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
           </Breadcrumb>
 
           {/* Page title */}
-          <HStack spacing={3} mb={6} flexWrap="wrap" gap={2} flexShrink={0}>
+          <HStack
+            spacing={2}
+            mb={{ base: 3, md: 4, lg: 5 }}
+            flexWrap="wrap"
+            gap={2}
+            flexShrink={0}
+          >
             <Icon as={MdSportsEsports} color="neon.purple" boxSize={6} />
             <Text
               fontSize={{ base: "xl", md: "2xl" }}
@@ -183,6 +220,8 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
                 onConfigChange={setPreprocessingConfig}
                 hyperparameters={hyperparameters}
                 onProceedToTrain={handleProceedToTrain}
+                externalStep={wizardStep}
+                onExternalStepChange={setWizardStep}
               />
             </Box>
           ) : (

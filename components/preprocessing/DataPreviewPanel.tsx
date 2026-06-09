@@ -6,9 +6,10 @@ import {
   TableContainer, Flex, Tooltip, SimpleGrid, Button,
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, useDisclosure,
 } from "@chakra-ui/react";
-import { FaDatabase, FaExclamationTriangle, FaCheckCircle, FaTable, FaDownload } from "react-icons/fa";
+import { FaDatabase, FaExclamationTriangle, FaCheckCircle, FaTable, FaDownload, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { MdNumbers, MdCategory, MdToggleOn, MdTextFields } from "react-icons/md";
 import { Dataset, ColumnInfo } from "@/types";
+import { useState } from "react";
 
 const DTYPE_CONFIG = {
   numeric:     { label: "Numeric",     icon: MdNumbers,   color: "cyan"   },
@@ -134,6 +135,7 @@ export function DataPreviewPanel({ dataset }: DataPreviewPanelProps) {
     : 0;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [issuesOpen, setIssuesOpen] = useState(false);
   const maxRows = Math.max(...dataset.columns.map(c => c.sampleValues.length));
 
   const downloadCSV = () => {
@@ -196,26 +198,61 @@ export function DataPreviewPanel({ dataset }: DataPreviewPanelProps) {
       <Box flex={1} overflowY="auto" pr={2} pb={2}>
         {/* Insights bar */}
         {(missingCols.length > 0 || outlierCols.length > 0) && (
-        <Box bg="rgba(251,146,60,0.08)" border="1px solid" borderColor="orange.800"
-          borderRadius="lg" p={3} mb={4}>
-          <HStack spacing={2} mb={1}>
-            <Icon as={FaExclamationTriangle} color="orange.400" boxSize={3.5} />
-            <Text fontSize="sm" fontWeight={700} color="orange.300">Data Quality Issues Detected</Text>
-          </HStack>
-          <VStack align="flex-start" spacing={0.5}>
-            {missingCols.map((c) => (
-              <Text key={c.id} fontSize="xs" color="gray.400">
-                • <Text as="span" color="orange.300">{c.name}</Text>: {c.missingPct}% missing values
+          <Box
+            bg="rgba(251,146,60,0.08)"
+            border="1px solid"
+            borderColor="orange.800"
+            borderRadius="lg"
+            mb={3}
+            overflow="hidden"
+          >
+            {/* Clickable header */}
+            <HStack
+              spacing={2}
+              px={3}
+              py={2}
+              cursor="pointer"
+              onClick={() => setIssuesOpen((o) => !o)}
+              _hover={{ bg: "rgba(251,146,60,0.06)" }}
+              transition="background 0.15s"
+              userSelect="none"
+            >
+              <Icon as={FaExclamationTriangle} color="orange.400" boxSize={3.5} />
+              <Text fontSize="sm" fontWeight={700} color="orange.300" flex={1}>
+                Data Quality Issues Detected
+                <Text as="span" fontSize="10px" color="orange.500" fontFamily="mono" ml={2}>
+                  ({missingCols.length + outlierCols.length} issue{missingCols.length + outlierCols.length !== 1 ? "s" : ""})
+                </Text>
               </Text>
-            ))}
-            {outlierCols.map((c) => (
-              <Text key={c.id} fontSize="xs" color="gray.400">
-                • <Text as="span" color="yellow.300">{c.name}</Text>: contains outliers
-              </Text>
-            ))}
-          </VStack>
-        </Box>
-      )}
+              <Icon
+                as={issuesOpen ? FaChevronUp : FaChevronDown}
+                color="orange.500"
+                boxSize={2.5}
+                transition="transform 0.2s"
+              />
+            </HStack>
+
+            {/* Collapsible body */}
+            <Box
+              maxH={issuesOpen ? "300px" : "0px"}
+              overflow="hidden"
+              transition="max-height 0.25s ease"
+            >
+              <VStack align="flex-start" spacing={0.5} px={3} pb={2.5}>
+                {missingCols.map((c) => (
+                  <Text key={c.id} fontSize="xs" color="gray.400">
+                    • <Text as="span" color="orange.300">{c.name}</Text>: {c.missingPct}% missing values
+                  </Text>
+                ))}
+                {outlierCols.map((c) => (
+                  <Text key={c.id} fontSize="xs" color="gray.400">
+                    • <Text as="span" color="yellow.300">{c.name}</Text>: contains outliers
+                  </Text>
+                ))}
+              </VStack>
+            </Box>
+          </Box>
+        )}
 
       {/* Data table */}
       <TableContainer

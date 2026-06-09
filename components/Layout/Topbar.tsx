@@ -30,8 +30,8 @@ export function Topbar({ onStartTour }: TopbarProps) {
       backdropFilter="blur(20px)"
       borderBottom="1px solid"
       borderColor="dark.border"
-      px={6}
-      py={3}
+      px={{ base: 4, md: 6 }}
+      py={{ base: 2, md: 3 }}
     >
       <Flex align="center" justify="space-between" maxW="1600px" mx="auto">
         {/* Brand */}

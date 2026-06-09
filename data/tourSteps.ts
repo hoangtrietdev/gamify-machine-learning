@@ -62,6 +62,7 @@ export const PLAY_TOUR_STEPS: TourStep[] = [
       "Before training, you need to prepare your data. The wizard guides you through 4 steps: Data Preview → Feature Selection → Scaling & Normalization → (Architecture for Neural Nets) → Training.",
     placement: "bottom",
     tip: "Your preprocessing choices directly affect model accuracy. A better pipeline = a higher score modifier!",
+    wizardStep: 1,
   },
   {
     targetId: "tour-data-preview",
@@ -70,6 +71,7 @@ export const PLAY_TOUR_STEPS: TourStep[] = [
     description:
       "Explore the dataset — examine column types, distributions, missing values, and correlations. Understanding your data is the foundation of any successful ML project.",
     placement: "bottom",
+    wizardStep: 1,
   },
   {
     targetId: "tour-feature-selection",
@@ -79,6 +81,7 @@ export const PLAY_TOUR_STEPS: TourStep[] = [
       "Choose which features (columns) to include in training. Irrelevant or noisy features can hurt performance. At least 2 features must be selected to proceed.",
     placement: "bottom",
     tip: "Select features correlated with the target label, and drop ones that are purely IDs or near-constant.",
+    wizardStep: 2,
   },
   {
     targetId: "tour-scaling-panel",
@@ -87,6 +90,7 @@ export const PLAY_TOUR_STEPS: TourStep[] = [
     description:
       "Standardize numerical features and encode categorical ones. Proper scaling is critical — especially for distance-based algorithms like KNN and SVM.",
     placement: "bottom",
+    wizardStep: 3,
   },
   {
     targetId: "tour-pipeline-score",
@@ -96,6 +100,7 @@ export const PLAY_TOUR_STEPS: TourStep[] = [
       "Your preprocessing choices are scored in real-time across four dimensions: Features, Scaling, Outliers, and Architecture. A higher score gives you an accuracy multiplier at training time!",
     placement: "left",
     tip: "Aim for a grade of A or B to get the best accuracy boost. The score updates live as you change settings.",
+    wizardStep: 3,
   },
   {
     targetId: "tour-hyperparameter-panel",
@@ -105,6 +110,7 @@ export const PLAY_TOUR_STEPS: TourStep[] = [
       "Pick your ML algorithm (Random Forest, Neural Net, SVM, etc.) and tune its hyperparameters — learning rate, depth, epochs, regularization, and more. Each choice has a real effect on training!",
     placement: "left",
     tip: "Random Forest is a great default. Neural Networks can achieve the highest accuracy but need more careful tuning.",
+    wizardStep: 5,
   },
   {
     targetId: "tour-training-panel",
@@ -114,6 +120,7 @@ export const PLAY_TOUR_STEPS: TourStep[] = [
       "Hit TRAIN MODEL to start! Watch live metrics — epoch count, accuracy, and loss — update in real-time. When complete, you'll receive a star rating based on how close you got to the target accuracy.",
     placement: "left",
     tip: "You can retrain with different hyperparameters as many times as you want. Experiment freely!",
+    wizardStep: 5,
   },
   {
     title: "You're Ready! 🚀",
@@ -121,5 +128,6 @@ export const PLAY_TOUR_STEPS: TourStep[] = [
     description:
       "That covers everything! Start by exploring the dataset, make smart preprocessing decisions, tune your hyperparameters, and shoot for ⭐⭐⭐ accuracy. Good luck, and have fun learning ML!",
     placement: "center",
+    wizardStep: 1,
   },
 ];

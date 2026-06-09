@@ -57,6 +57,11 @@ export interface TourStep {
   placement?: "top" | "bottom" | "left" | "right" | "center";
   /** Optional tip shown at the bottom of the card */
   tip?: string;
+  /**
+   * Optional: navigate the PreprocessingWizard to this step (1-4).
+   * Pass 5 to show the Training Arena.
+   */
+  wizardStep?: number;
 }
 
 interface Rect {
@@ -69,6 +74,8 @@ interface Rect {
 interface TourGuideProps {
   steps: TourStep[];
   tour: UseTourReturn;
+  /** Called when the tour moves to a step that carries a wizardStep value */
+  onStepChange?: (step: TourStep) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -289,14 +296,15 @@ function computeCardPos(
 // ---------------------------------------------------------------------------
 // Main TourGuide
 // ---------------------------------------------------------------------------
-export function TourGuide({ steps, tour }: TourGuideProps) {
+export function TourGuide({ steps, tour, onStepChange }: TourGuideProps) {
   const { isOpen, currentStep, totalSteps, nextStep, prevStep, goToStep, completeTour, closeTour } = tour;
   const [rect, setRect] = useState<Rect | null>(null);
   const [key, setKey] = useState(0); // force re-animation
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [cardH, setCardH] = useState(300);
 
   const step = steps[currentStep];
   const CARD_W = 380;
-  const CARD_H = 280;
 
   // Lock / unlock body scroll while tour is open
   useEffect(() => {
@@ -309,6 +317,19 @@ export function TourGuide({ steps, tour }: TourGuideProps) {
       document.body.style.overflow = "";
     };
   }, [isOpen]);
+
+  // Notify parent of step changes (for wizard navigation)
+  useEffect(() => {
+    if (!isOpen || !step) return;
+    if (onStepChange) onStepChange(step);
+  }, [isOpen, currentStep]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Measure actual card height after render
+  useEffect(() => {
+    if (cardRef.current) {
+      setCardH(cardRef.current.offsetHeight);
+    }
+  });
 
   // Measure target element
   useEffect(() => {
@@ -323,30 +344,30 @@ export function TourGuide({ steps, tour }: TourGuideProps) {
       const el = document.getElementById(step.targetId!);
       if (!el) {
         setRect(null);
-      } else {
-        // Scroll element into view with extra top-padding so the card
-        // above it always has breathing room (avoids clipping at bottom)
-        el.scrollIntoView({ block: "center", behavior: "smooth" });
-
-        // Re-measure after the scroll animation settles
-        setTimeout(() => {
-          const r = el.getBoundingClientRect();
-          setRect({ top: r.top, left: r.left, width: r.width, height: r.height });
-          setKey((k) => k + 1);
-        }, 350);
+        setKey((k) => k + 1);
         return;
       }
-      setKey((k) => k + 1);
+
+      // Scroll element into view — use 'nearest' to avoid pushing it
+      // off-screen when the element is already partially visible.
+      el.scrollIntoView({ block: "nearest", behavior: "smooth" });
+
+      // Re-measure after the scroll animation settles
+      setTimeout(() => {
+        const r = el.getBoundingClientRect();
+        setRect({ top: r.top, left: r.left, width: r.width, height: r.height });
+        setKey((k) => k + 1);
+      }, 400);
     };
 
-    // Small delay to allow layout
-    const t = setTimeout(measure, 150);
+    // Allow wizard state change + layout to settle before measuring
+    const t = setTimeout(measure, 250);
     return () => clearTimeout(t);
   }, [isOpen, currentStep, step?.targetId]);
 
   if (!isOpen) return null;
 
-  const pos = computeCardPos(rect, step?.placement, CARD_W, CARD_H);
+  const pos = computeCardPos(rect, step?.placement, CARD_W, cardH);
   const isFirst = currentStep === 0;
   const isLast = currentStep === totalSteps - 1;
 
@@ -358,6 +379,7 @@ export function TourGuide({ steps, tour }: TourGuideProps) {
       {/* Tour card */}
       <Box
         key={key}
+        ref={cardRef}
         position="fixed"
         top={`${pos.top}px`}
         left={`${pos.left}px`}
