@@ -215,20 +215,24 @@ export function PreprocessingWizard({
           display="flex"
           flexDir="column"
         >
-          {currentStep === 1 && <DataPreviewPanel dataset={dataset} />}
+          {currentStep === 1 && <Box id="tour-data-preview" flex={1} overflow="auto"><DataPreviewPanel dataset={dataset} /></Box>}
           {currentStep === 2 && (
+            <Box id="tour-feature-selection" flex={1} overflow="auto">
             <FeatureSelectionPanel
               columns={dataset.columns}
               config={config}
               onChange={onConfigChange}
             />
+            </Box>
           )}
           {currentStep === 3 && (
+            <Box id="tour-scaling-panel" flex={1} overflow="auto">
             <ScalingPanel
               columns={dataset.columns}
               config={config}
               onChange={onConfigChange}
             />
+            </Box>
           )}
           {currentStep === 4 && isNeuralNet && (
             <NetworkArchitecturePanel
@@ -240,7 +244,9 @@ export function PreprocessingWizard({
         </Box>
 
         {/* Score widget */}
-        <ScoreWidget score={score} />
+        <Box id="tour-pipeline-score">
+          <ScoreWidget score={score} />
+        </Box>
       </Flex>
 
       {/* Navigation */}

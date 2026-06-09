@@ -23,6 +23,9 @@ import {
   computePreprocessingScore,
   getDefaultPreprocessingConfig,
 } from "@/utils/preprocessingScore";
+import { TourGuide } from "@/components/ui/TourGuide";
+import { useTour } from "@/hooks/useTour";
+import { PLAY_TOUR_STEPS } from "@/data/tourSteps";
 
 // ---------------------------------------------------------------------------
 // Defaults
@@ -48,6 +51,8 @@ interface PlayPageProps {
 // Page component
 // ---------------------------------------------------------------------------
 const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
+  const tour = useTour("play", PLAY_TOUR_STEPS.length);
+
   const [hyperparameters, setHyperparameters] = useState<Hyperparameters>(
     DEFAULT_HYPERPARAMETERS
   );
@@ -103,7 +108,8 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
         />
       </Head>
 
-      <Layout>
+      <Layout onStartTour={tour.startTour}>
+        <TourGuide steps={PLAY_TOUR_STEPS} tour={tour} />
         <Box px={{ base: 4, lg: 6 }} py={4} maxW="1400px" mx="auto" h="calc(100vh - 65px)" display="flex" flexDir="column" overflow="hidden">
           {/* Breadcrumb */}
           <Breadcrumb
@@ -169,7 +175,7 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
 
           {/* ── PREPROCESSING WIZARD (Steps 1-4) ── */}
           {!showTraining ? (
-            <Box flex={1} minH={0} overflow="hidden" display="flex" flexDir="column">
+            <Box id="tour-preprocessing-stepper" flex={1} minH={0} overflow="hidden" display="flex" flexDir="column">
               <PreprocessingWizard
                 key={dataset.id}
                 dataset={dataset}
@@ -199,7 +205,7 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
                 </GridItem>
 
                 {/* Panel 2: Hyperparameters */}
-                <GridItem h="100%" overflowY="auto">
+                <GridItem id="tour-hyperparameter-panel" h="100%" overflowY="auto">
                   <HyperparameterPanel
                     hyperparameters={hyperparameters}
                     onChange={setHyperparameters}
@@ -209,7 +215,7 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
                 </GridItem>
 
                 {/* Panel 3: Training */}
-                <GridItem h="100%" overflowY="auto">
+                <GridItem id="tour-training-panel" h="100%" overflowY="auto">
                   <TrainingPanel
                     onTrain={handleTrain}
                     onReset={resetTraining}

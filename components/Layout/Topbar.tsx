@@ -13,8 +13,13 @@ import {
 import { FaBrain, FaGithub } from "react-icons/fa";
 import { MdScience } from "react-icons/md";
 import Link from "next/link";
+import { TourButton } from "@/components/ui/TourGuide";
 
-export function Topbar() {
+interface TopbarProps {
+  onStartTour?: () => void;
+}
+
+export function Topbar({ onStartTour }: TopbarProps) {
   return (
     <Box
       as="header"
@@ -80,6 +85,7 @@ export function Topbar() {
           >
             MVP
           </Badge>
+          {onStartTour && <TourButton onStart={onStartTour} />}
           <Tooltip label="View source" hasArrow>
             <Box
               as="a"

@@ -21,6 +21,9 @@ import Link from "next/link";
 import { Layout } from "@/components/Layout/Layout";
 import { DATASETS, DIFFICULTY_CONFIG } from "@/data/datasets";
 import { Dataset } from "@/types";
+import { TourGuide } from "@/components/ui/TourGuide";
+import { useTour } from "@/hooks/useTour";
+import { HOME_TOUR_STEPS } from "@/data/tourSteps";
 
 const float = keyframes`
   0%, 100% { transform: translateY(0px); }
@@ -165,6 +168,8 @@ function DatasetCard({ dataset }: { dataset: Dataset }) {
 }
 
 const Home: NextPage = () => {
+  const tour = useTour("home", HOME_TOUR_STEPS.length);
+
   return (
     <>
       <Head>
@@ -176,7 +181,8 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Layout showSidebar={false}>
+      <Layout showSidebar={false} onStartTour={tour.startTour}>
+        <TourGuide steps={HOME_TOUR_STEPS} tour={tour} />
         <Box maxW="1200px" mx="auto" px={6} py={12}>
           {/* Hero section */}
           <VStack spacing={6} mb={16} textAlign="center">
@@ -227,7 +233,7 @@ const Home: NextPage = () => {
             </Text>
 
             {/* Feature pills */}
-            <HStack spacing={3} flexWrap="wrap" justify="center">
+            <HStack id="tour-feature-pills" spacing={3} flexWrap="wrap" justify="center">
               {[
                 { icon: "⚡", text: "Live Training Simulation" },
                 { icon: "🎛️", text: "Interactive Hyperparameters" },
@@ -262,12 +268,16 @@ const Home: NextPage = () => {
           </VStack>
 
           {/* Difficulty sections */}
-          {(["beginner", "intermediate", "expert"] as const).map((diff) => {
+          {(["beginner", "intermediate", "expert"] as const).map((diff, diffIdx) => {
             const config = DIFFICULTY_CONFIG[diff];
             const datasets = DATASETS.filter((d) => d.difficulty === diff);
 
             return (
-              <Box key={diff} mb={12}>
+              <Box
+                key={diff}
+                mb={12}
+                id={diff === "beginner" ? "tour-difficulty-beginner" : undefined}
+              >
                 <HStack spacing={3} mb={5}>
                   <Box
                     w="4px"
@@ -291,8 +301,13 @@ const Home: NextPage = () => {
                 </HStack>
 
                 <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} spacing={4}>
-                  {datasets.map((dataset) => (
-                    <DatasetCard key={dataset.id} dataset={dataset} />
+                  {datasets.map((dataset, dIdx) => (
+                    <Box
+                      key={dataset.id}
+                      id={diff === "beginner" && dIdx === 0 ? "tour-dataset-card-0" : undefined}
+                    >
+                      <DatasetCard dataset={dataset} />
+                    </Box>
                   ))}
                 </SimpleGrid>
               </Box>

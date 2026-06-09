@@ -9,12 +9,13 @@ import { Sidebar } from "./Sidebar";
 interface LayoutProps {
   children: ReactNode;
   showSidebar?: boolean;
+  onStartTour?: () => void;
 }
 
-export function Layout({ children, showSidebar = true }: LayoutProps) {
+export function Layout({ children, showSidebar = true, onStartTour }: LayoutProps) {
   return (
     <Box minH="100vh" bg="dark.bg">
-      <Topbar />
+      <Topbar onStartTour={onStartTour} />
       <Flex>
         {showSidebar && <Sidebar />}
         <Box flex={1} minW={0} overflowX="hidden">
