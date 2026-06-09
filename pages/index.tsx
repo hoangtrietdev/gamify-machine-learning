@@ -228,8 +228,7 @@ const Home: NextPage = () => {
               lineHeight={1.7}
             >
               Tune hyperparameters, watch your model train in real-time, and earn
-              stars based on accuracy. No coding required, just pure intuition. 
-              Current phase just simulates training in the browser, Python backend for real model training will update in the future!
+              stars based on accuracy. No coding required, just pure intuition.
             </Text>
 
             {/* Feature pills */}
