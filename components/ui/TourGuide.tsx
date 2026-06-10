@@ -324,6 +324,12 @@ export function TourGuide({ steps, tour, onStepChange }: TourGuideProps) {
     if (onStepChange) onStepChange(step);
   }, [isOpen, currentStep]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Immediately clear rect when step changes so the card doesn't flash
+  // at the previous step's position while the new element is being measured.
+  useEffect(() => {
+    setRect(null);
+  }, [currentStep]);
+
   // Measure actual card height after render
   useEffect(() => {
     if (cardRef.current) {
@@ -331,7 +337,7 @@ export function TourGuide({ steps, tour, onStepChange }: TourGuideProps) {
     }
   });
 
-  // Measure target element
+  // Measure target element — with retry logic for layout-change steps
   useEffect(() => {
     if (!isOpen) return;
     if (!step?.targetId) {
@@ -340,29 +346,51 @@ export function TourGuide({ steps, tour, onStepChange }: TourGuideProps) {
       return;
     }
 
-    const measure = () => {
-      const el = document.getElementById(step.targetId!);
-      if (!el) {
-        setRect(null);
-        setKey((k) => k + 1);
-        return;
-      }
+    const timers: ReturnType<typeof setTimeout>[] = [];
 
+    const measureAndSet = (el: HTMLElement) => {
       // Scroll element into view — use 'nearest' to avoid pushing it
       // off-screen when the element is already partially visible.
       el.scrollIntoView({ block: "nearest", behavior: "smooth" });
 
       // Re-measure after the scroll animation settles
-      setTimeout(() => {
+      const t = setTimeout(() => {
         const r = el.getBoundingClientRect();
         setRect({ top: r.top, left: r.left, width: r.width, height: r.height });
         setKey((k) => k + 1);
-      }, 400);
+      }, 350);
+      timers.push(t);
     };
 
-    // Allow wizard state change + layout to settle before measuring
-    const t = setTimeout(measure, 250);
-    return () => clearTimeout(t);
+    // Retry finding the element — needed when a layout change (wizardStep /
+    // showTraining toggle) causes the target to be unmounted and re-mounted.
+    const MAX_RETRIES = 8;
+    const RETRY_INTERVAL = 120; // ms between retries
+
+    let attempt = 0;
+    const tryMeasure = () => {
+      const el = document.getElementById(step.targetId!);
+      if (el) {
+        measureAndSet(el);
+        return;
+      }
+      attempt++;
+      if (attempt < MAX_RETRIES) {
+        const t = setTimeout(tryMeasure, RETRY_INTERVAL);
+        timers.push(t);
+      } else {
+        // Element never appeared — show centered overlay
+        setRect(null);
+        setKey((k) => k + 1);
+      }
+    };
+
+    // Allow wizard state change + DOM re-render to settle before first attempt.
+    // 300ms is enough for React state→render, but still feels snappy.
+    const initial = setTimeout(tryMeasure, 300);
+    timers.push(initial);
+
+    return () => timers.forEach(clearTimeout);
   }, [isOpen, currentStep, step?.targetId]);
 
   if (!isOpen) return null;
