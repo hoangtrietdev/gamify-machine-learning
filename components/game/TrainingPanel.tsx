@@ -40,6 +40,7 @@ const scanline = keyframes`
 interface TrainingPanelProps {
   onTrain: () => void;
   onReset: () => void;
+  onReview?: () => void;
   isTraining: boolean;
   isComplete: boolean;
   isError: boolean;
@@ -61,6 +62,7 @@ function getProgressColor(accuracy: number): string {
 export function TrainingPanel({
   onTrain,
   onReset,
+  onReview,
   isTraining,
   isComplete,
   isError,
@@ -203,44 +205,67 @@ export function TrainingPanel({
         )}
 
         {/* Action buttons */}
-        <HStack spacing={3}>
-          <Button
-            id="train-model-btn"
-            flex={1}
-            size="lg"
-            isLoading={isTraining}
-            loadingText="Training..."
-            isDisabled={isTraining}
-            onClick={onTrain}
-            colorScheme="purple"
-            leftIcon={<Icon as={isComplete ? FaRedo : FaBolt} />}
-            animation={!isTraining && !isComplete ? `${pulse} 2.5s ease-in-out infinite` : undefined}
-            _hover={{
-              transform: "translateY(-2px)",
-              boxShadow: "0 0 24px rgba(139,92,246,0.6)",
-            }}
-            transition="all 0.2s"
-            bgGradient="linear(to-r, neon.purple, #5B21B6)"
-            fontWeight={800}
-            letterSpacing="wider"
-          >
-            {isComplete ? "RETRAIN" : "TRAIN MODEL"}
-          </Button>
+        <VStack spacing={3} align="stretch">
+          <HStack spacing={3}>
+            <Button
+              id="train-model-btn"
+              flex={1}
+              size="lg"
+              isLoading={isTraining}
+              loadingText="Training..."
+              isDisabled={isTraining}
+              onClick={onTrain}
+              colorScheme="purple"
+              leftIcon={<Icon as={isComplete ? FaRedo : FaBolt} />}
+              animation={!isTraining && !isComplete ? `${pulse} 2.5s ease-in-out infinite` : undefined}
+              _hover={{
+                transform: "translateY(-2px)",
+                boxShadow: "0 0 24px rgba(139,92,246,0.6)",
+              }}
+              transition="all 0.2s"
+              bgGradient="linear(to-r, neon.purple, #5B21B6)"
+              fontWeight={800}
+              letterSpacing="wider"
+            >
+              {isComplete ? "RETRAIN" : "TRAIN MODEL"}
+            </Button>
 
-          {(isTraining || isComplete) && (
+            {(isTraining || isComplete) && (
+              <Button
+                size="lg"
+                variant="outline"
+                colorScheme="gray"
+                onClick={onReset}
+                isDisabled={isTraining}
+                leftIcon={<Icon as={FaRedo} />}
+                _hover={{ borderColor: "gray.500" }}
+              >
+                Reset
+              </Button>
+            )}
+          </HStack>
+
+          {/* Review button — appears after training completes */}
+          {isComplete && onReview && (
             <Button
               size="lg"
               variant="outline"
-              colorScheme="gray"
-              onClick={onReset}
-              isDisabled={isTraining}
-              leftIcon={<Icon as={FaRedo} />}
-              _hover={{ borderColor: "gray.500" }}
+              colorScheme="cyan"
+              onClick={onReview}
+              fontWeight={700}
+              borderColor="neon.cyan"
+              color="neon.cyan"
+              _hover={{
+                bg: "rgba(0,212,255,0.08)",
+                transform: "translateY(-1px)",
+                boxShadow: "0 0 20px rgba(0,212,255,0.25)",
+              }}
+              transition="all 0.2s"
             >
-              Reset
+              📚 Review My Decisions →
             </Button>
           )}
-        </HStack>
+        </VStack>
       </VStack>
     </Box>
   );

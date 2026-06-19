@@ -205,7 +205,7 @@ export function PreprocessingWizard({
   };
 
   return (
-    <Box display="flex" flexDir="column" flex={1} overflow="hidden">
+    <Box display="flex" flexDir="column">
       {/* Stepper */}
       <Box
         bg="dark.panel"
@@ -230,8 +230,7 @@ export function PreprocessingWizard({
         </HStack>
       </Box>
 
-      {/* Content + Score */}
-      <Flex gap={{ base: 3, md: 4 }} align="stretch" flex={1} overflow="hidden">
+      <Flex gap={{ base: 3, md: 4 }} align="stretch">
         {/* Step content */}
         <Box
           flex={1}
@@ -240,13 +239,12 @@ export function PreprocessingWizard({
           borderColor="dark.border"
           borderRadius="2xl"
           p={{ base: 3, md: 4, lg: 5 }}
-          minH={0}
           display="flex"
           flexDir="column"
         >
-          {currentStep === 1 && <Box id="tour-data-preview" flex={1} overflow="auto"><DataPreviewPanel dataset={dataset} /></Box>}
+          {currentStep === 1 && <Box id="tour-data-preview" flex={1}><DataPreviewPanel dataset={dataset} /></Box>}
           {currentStep === 2 && (
-            <Box id="tour-feature-selection" flex={1} overflow="auto">
+            <Box id="tour-feature-selection" flex={1}>
             <FeatureSelectionPanel
               columns={dataset.columns}
               config={config}
@@ -255,7 +253,7 @@ export function PreprocessingWizard({
             </Box>
           )}
           {currentStep === 3 && (
-            <Box id="tour-scaling-panel" flex={1} overflow="auto">
+            <Box id="tour-scaling-panel" flex={1}>
             <ScalingPanel
               columns={dataset.columns}
               config={config}

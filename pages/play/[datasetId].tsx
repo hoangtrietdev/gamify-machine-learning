@@ -8,6 +8,7 @@ import {
   BreadcrumbLink, Badge, Button,
 } from "@chakra-ui/react";
 import { useState, useMemo, useEffect, useCallback } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import { FaChevronRight, FaHome, FaArrowLeft } from "react-icons/fa";
 import { MdSportsEsports } from "react-icons/md";
@@ -117,6 +118,27 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
     });
   };
 
+  const router = useRouter();
+
+  const handleGoToReview = () => {
+    const outlierStrategies = preprocessingConfig.outlierConfigs.map((c) => c.strategy);
+    router.push({
+      pathname: "/play/review",
+      query: {
+        datasetId: dataset.id,
+        accuracy: result?.finalAccuracy.toFixed(2) ?? "0",
+        pipeScore: score.total,
+        algorithm: hyperparameters.algorithm,
+        standardization: preprocessingConfig.standardization,
+        normalization: preprocessingConfig.normalization,
+        outlierStrategies: JSON.stringify(outlierStrategies),
+        featureCount: preprocessingConfig.selectedFeatures.length,
+        selectedFeatures: JSON.stringify(preprocessingConfig.selectedFeatures),
+        breakdown: JSON.stringify(score.breakdown),
+      },
+    });
+  };
+
   return (
     <>
       <Head>
@@ -134,10 +156,8 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
           py={{ base: 2, md: 3, lg: 4 }}
           maxW="1400px"
           mx="auto"
-          h="calc(100vh - 57px)"
           display="flex"
           flexDir="column"
-          overflow="hidden"
         >
           {/* Breadcrumb */}
           <Breadcrumb
@@ -212,7 +232,7 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
 
           {/* ── PREPROCESSING WIZARD (Steps 1-4) ── */}
           {!showTraining ? (
-            <Box id="tour-preprocessing-stepper" flex={1} minH={0} overflow="hidden" display="flex" flexDir="column">
+            <Box id="tour-preprocessing-stepper" display="flex" flexDir="column">
               <PreprocessingWizard
                 key={dataset.id}
                 dataset={dataset}
@@ -244,7 +264,7 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
                 </GridItem>
 
                 {/* Panel 2: Hyperparameters */}
-                <GridItem id="tour-hyperparameter-panel" h="100%" overflowY="auto">
+                <GridItem id="tour-hyperparameter-panel">
                   <HyperparameterPanel
                     hyperparameters={hyperparameters}
                     onChange={setHyperparameters}
@@ -254,10 +274,11 @@ const PlayPage: NextPage<PlayPageProps> = ({ dataset }) => {
                 </GridItem>
 
                 {/* Panel 3: Training */}
-                <GridItem id="tour-training-panel" h="100%" overflowY="auto">
+                <GridItem id="tour-training-panel">
                   <TrainingPanel
                     onTrain={handleTrain}
                     onReset={resetTraining}
+                    onReview={handleGoToReview}
                     isTraining={isTraining}
                     isComplete={isComplete}
                     isError={isError}

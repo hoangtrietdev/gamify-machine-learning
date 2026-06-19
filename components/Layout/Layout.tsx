@@ -18,7 +18,7 @@ export function Layout({ children, showSidebar = true, onStartTour }: LayoutProp
       <Topbar onStartTour={onStartTour} />
       <Flex>
         {showSidebar && <Sidebar />}
-        <Box flex={1} minW={0} overflowX="hidden">
+        <Box flex={1} minW={0}>
           {children}
         </Box>
       </Flex>
